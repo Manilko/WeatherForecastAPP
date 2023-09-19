@@ -1,0 +1,7 @@
+# GitIgnore 
+
+Pods/
+Podfile.lock
+.xcworkspace
+
+
