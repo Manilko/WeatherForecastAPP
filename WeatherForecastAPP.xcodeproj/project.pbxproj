@@ -16,6 +16,8 @@
 		CED955B82AB9AFE00029B353 /* WeatherForecastAPPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED955B72AB9AFE00029B353 /* WeatherForecastAPPTests.swift */; };
 		CED955C22AB9AFE00029B353 /* WeatherForecastAPPUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED955C12AB9AFE00029B353 /* WeatherForecastAPPUITests.swift */; };
 		CED955C42AB9AFE00029B353 /* WeatherForecastAPPUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED955C32AB9AFE00029B353 /* WeatherForecastAPPUITestsLaunchTests.swift */; };
+		CED955D12AB9B7FC0029B353 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED955D02AB9B7FC0029B353 /* Networking.swift */; };
+		CED955D32AB9B8260029B353 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED955D22AB9B8260029B353 /* Models.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		CED955BD2AB9AFE00029B353 /* WeatherForecastAPPUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherForecastAPPUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED955C12AB9AFE00029B353 /* WeatherForecastAPPUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastAPPUITests.swift; sourceTree = "<group>"; };
 		CED955C32AB9AFE00029B353 /* WeatherForecastAPPUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastAPPUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CED955D02AB9B7FC0029B353 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		CED955D22AB9B8260029B353 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 				CED955A02AB9AFDE0029B353 /* AppDelegate.swift */,
 				CED955A22AB9AFDE0029B353 /* SceneDelegate.swift */,
 				CED955A42AB9AFDE0029B353 /* ViewController.swift */,
+				CED955D02AB9B7FC0029B353 /* Networking.swift */,
+				CED955D22AB9B8260029B353 /* Models.swift */,
 				CED955A62AB9AFDE0029B353 /* Main.storyboard */,
 				CED955A92AB9AFE00029B353 /* Assets.xcassets */,
 				CED955AB2AB9AFE00029B353 /* LaunchScreen.storyboard */,
@@ -261,6 +267,8 @@
 				CED955A52AB9AFDE0029B353 /* ViewController.swift in Sources */,
 				CED955A12AB9AFDE0029B353 /* AppDelegate.swift in Sources */,
 				CED955A32AB9AFDE0029B353 /* SceneDelegate.swift in Sources */,
+				CED955D12AB9B7FC0029B353 /* Networking.swift in Sources */,
+				CED955D32AB9B8260029B353 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
