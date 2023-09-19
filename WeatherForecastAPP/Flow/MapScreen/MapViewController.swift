@@ -15,11 +15,11 @@ final class MapViewController: UIViewController {
     private let coordinates: Coordinates
 
     private lazy var mapView: GMSMapView = {
-       let camera = GMSCameraPosition.camera(withLatitude: 50.4501, longitude: 30.5234, zoom: 8)
-       let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
+        let mapView = GMSMapView.init()
        mapView.translatesAutoresizingMaskIntoConstraints = false
        return mapView
    }()
+
 
     private let locationManager = CLLocationManager()
     private let networkManager = NetworkManager()
@@ -79,8 +79,10 @@ final class MapViewController: UIViewController {
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+       
 
-        mapView.mapType = .normal
+//        mapView.mapType = .normal
     }
     
     func createModel(json: ResponseJSON, coordinate: Coordinates) -> Place {
@@ -131,7 +133,8 @@ extension MapViewController: CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("!!!!!!!!!\(error)")
+        
+        AppLogger.log(level: .error, error)
     }
     
 }
@@ -156,18 +159,18 @@ extension MapViewController: GMSMapViewDelegate{
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
         
-        print("didTapInfoWindowOf")
+        AppLogger.log(level: .info, "didTapInfoWindowOf")
     }
     
     func mapView(_ mapView: GMSMapView, didLongPressInfoWindowOf marker: GMSMarker) {
         
-        print("didLongPressInfoWindowOf")
+        AppLogger.log(level: .info, "didLongPressInfoWindowOf")
     }
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         return false
     }
-    
+
     func didTapMyLocationButton(for mapView: GMSMapView) -> Bool {
         return false
     }
@@ -182,7 +185,7 @@ extension MapViewController: GMSMapViewDelegate{
                 let placeAddress = try await networkManager.fetchPlaceAddress(coordinates: coordinates)
             
                 AppLogger.log(level: .info, placeAddress)
-                
+
                 self.selectedPlace = createModel(json: placeAddress, coordinate: coordinates)
                 self.isSelectedPlaceChangedLocation = true
             } catch {

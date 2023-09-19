@@ -7,6 +7,7 @@
 
 import UIKit
 import GoogleMaps
+import GooglePlaces
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,7 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          homeCoordinator.start()
          
          // MARK: GMSServices GoogleMaps
-         GMSServices.provideAPIKey("AIzaSyABAJzP7HAiQebd3nywFwf4BWM8cw6x6zY")
+         GMSServices.provideAPIKey(AppConstants.gmsServicesapiKey)
+         
+         // MARK: GMSPlacesClient GooglePlaces
+         GMSPlacesClient.provideAPIKey(AppConstants.gmsPlacesClientKey)
          
          window?.rootViewController = navigationController
          window?.makeKeyAndVisible()

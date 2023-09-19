@@ -4,6 +4,8 @@
 <dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
+		<key>GMSAPIKey</key>
+		<string>AIzaSyABAJzP7HAiQebd3nywFwf4BWM8cw6x6zY</string>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 		<key>UISceneConfigurations</key>
