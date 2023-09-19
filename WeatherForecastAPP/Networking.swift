@@ -7,14 +7,17 @@
 
 import Foundation
 
+// MARK: HTTPMethod
 enum HTTPMethod: String {
     case get = "GET"
 }
 
+// MARK: NetworkingRouter
 enum NetworkingRouter {
     case getPlaceAddress(coordinates: Coordinates)
     case getOneDayForecast(coordinates: Coordinates)
     case getFiveDaysForecast(coordinates: Coordinates)
+    
 }
 
 extension NetworkingRouter {
@@ -29,13 +32,6 @@ extension NetworkingRouter {
             return .get
         }
     }
-    
-//    var path: String {
-//        switch self {
-//        case .getPlaceAddress:
-//            return ""
-//        }
-//    }
         
     var queryItem: [URLQueryItem] {
         switch self {
@@ -62,7 +58,6 @@ extension NetworkingRouter {
         
         
     func asURLRequest(urlString: String) throws -> URLRequest {
-//        var url = URL(string: Constants.googleapisUrl)!
         var url = URL(string: urlString)!
         url.append(queryItems: queryItem)
         
@@ -76,75 +71,25 @@ extension NetworkingRouter {
     }
 }
 
-    
-    
-    class NetworkManager{
-        
-        func fetchPlaceAddress(coordinates: Coordinates) async throws -> ResponseJSON{
-            
-            let request = try? NetworkingRouter.getPlaceAddress(coordinates: coordinates).asURLRequest(urlString: Constants.googleapisUrl)
-            print(request!)
-            
-            let session = URLSession.shared
-            let (data, response) = try await session.data(for: request!)
-            print(data)
-            
-            let httpurlResponse = response as? HTTPURLResponse
-            print("respons1.statusCode = \(httpurlResponse?.statusCode ?? 0)" )
-            
-            let decoder = JSONDecoder()
-            return try decoder.decode(ResponseJSON.self, from: data)
-            
-        }
-        
-//        func fetchForecast(coordinates: Coordinates) async throws -> ForecastResponse{
-//
-//            let request = try? NetworkingRouter.getOneDayForecast(coordinates: coordinates).asURLRequest(urlString: Constants.openweatherUrl)
-//            print(request!)
-//
-//            let session = URLSession.shared
-//            let (data, response) = try await session.data(for: request!)
-//            print(data)
-//
-//            let httpurlResponse = response as? HTTPURLResponse
-//            print("respons1.statusCode = \(httpurlResponse?.statusCode ?? 0)" )
-//
-//            let decoder = JSONDecoder()
-//            return try decoder.decode(ForecastResponse.self, from: data)
-//
-//        }
-        
-        func fetch5Forecast(coordinates: Coordinates) async throws -> Forecast5Response{
-            
-            let request = try? NetworkingRouter.getOneDayForecast(coordinates: coordinates).asURLRequest(urlString: Constants.openweather5Url)
-            print(request!)
-            
-            let session = URLSession.shared
-            let (data, response) = try await session.data(for: request!)
-            print(data)
-            
-            let httpurlResponse = response as? HTTPURLResponse
-            print("respons1.statusCode = \(httpurlResponse?.statusCode ?? 0)" )
-            
-            let decoder = JSONDecoder()
-            return try decoder.decode(Forecast5Response.self, from: data)
-            
-        }
-        
-    }
-    
-    
-    
+// MARK: Error
     enum APIError: Error {
         case badRequest
         case serverError
         case unknown
     }
+
+    enum ComputerAPIError: Error {
+        case nilRequest
+        case invalidResponseFormat
+    }
     
+// MARK: APIRequestProtocol
     protocol APIRequestProtocol {
         func get(request: URLRequest) async throws -> Result<Data, Error>
     }
     
+
+// MARK: APIRequest
     final class APIRequest: APIRequestProtocol {
         
         func get(request: URLRequest) async throws -> Result<Data, Error> {
@@ -171,96 +116,56 @@ extension NetworkingRouter {
         }
     }
     
-    
-protocol APIProtocol {
-    func fetchPlace(with coordinates: Coordinates) async throws -> ResponseJSON?
-//    func fetchForecast(with coordinates: Coordinates) async throws -> ForecastResponse?
-    func fetch5Forecast(with coordinates: Coordinates) async throws -> Forecast5Response?
+
+// MARK: GenericNetworkService
+protocol GenericNetworkService {
+    func fetchData<T: Decodable>(for router: NetworkingRouter, baseURL: String, responseType: T.Type) async throws -> T
 }
+
+// MARK: GenericNetworkManager
+final class GenericNetworkManager: GenericNetworkService {
+    private let apiRequest: APIRequestProtocol
     
-    
-    enum ComputerAPIError: Error {
-        case nilRequest
-        case invalidResponseFormat
+    init(apiRequest: APIRequestProtocol = APIRequest()) {
+        self.apiRequest = apiRequest
     }
     
-final class APIService: APIProtocol {
-   
-    
-   
-    
-    
-        private let apiRequest: APIRequestProtocol
+    func fetchData<T: Decodable>(for router: NetworkingRouter, baseURL: String, responseType: T.Type) async throws -> T {
+        let request = try router.asURLRequest(urlString: baseURL)
+        let apiData = try await apiRequest.get(request: request)
         
-        init(apiRequest: APIRequestProtocol = APIRequest()) {
-            self.apiRequest = apiRequest
-        }
-        
-        func fetchPlace(with coordinates: Coordinates) async throws -> ResponseJSON? {
-            
-            let request = try? NetworkingRouter.getPlaceAddress(coordinates: coordinates).asURLRequest(urlString: Constants.googleapisUrl)
-            guard let urlRequest = request else {
-                throw ComputerAPIError.nilRequest
-            }
-            
-            let apiData = try await apiRequest.get(request: urlRequest)
-            switch apiData {
-            case .success(let data):
-                let decoder = JSONDecoder()
-                do {
-                    return try decoder.decode(ResponseJSON.self, from: data)
-                } catch {
-                    throw ComputerAPIError.invalidResponseFormat
-                }
-            case .failure(let error):
-                throw error
-            }
-        }
-    
-    
-//    func fetchForecast(with coordinates: Coordinates) async throws -> ForecastResponse? {
-//        let request = try? NetworkingRouter.getOneDayForecast(coordinates: coordinates).asURLRequest(urlString: Constants.openweatherUrl)
-//        guard let urlRequest = request else {
-//            throw ComputerAPIError.nilRequest
-//        }
-//
-//        let apiData = try await apiRequest.get(request: urlRequest)
-//        switch apiData {
-//        case .success(let data):
-//            let decoder = JSONDecoder()
-//            do {
-//                return try decoder.decode(ForecastResponse.self, from: data)
-//            } catch {
-//                throw ComputerAPIError.invalidResponseFormat
-//            }
-//        case .failure(let error):
-//            throw error
-//        }
-//    }
-    
-    func fetch5Forecast(with coordinates: Coordinates) async throws -> Forecast5Response? {
-        
-        let request = try? NetworkingRouter.getFiveDaysForecast(coordinates: coordinates).asURLRequest(urlString: Constants.openweather5Url)
-        guard let urlRequest = request else {
-            throw ComputerAPIError.nilRequest
-        }
-        
-        let apiData = try await apiRequest.get(request: urlRequest)
         switch apiData {
         case .success(let data):
             let decoder = JSONDecoder()
-            do {
-                return try decoder.decode(Forecast5Response.self, from: data)
-            } catch {
-                throw ComputerAPIError.invalidResponseFormat
-            }
+            return try decoder.decode(T.self, from: data)
         case .failure(let error):
             throw error
         }
     }
+}
+
+
+// MARK: class NetworkManager
+final class NetworkManager {
+    private let genericNetworkService: GenericNetworkService
     
-    
+    init(genericNetworkService: GenericNetworkService = GenericNetworkManager()) {
+        self.genericNetworkService = genericNetworkService
     }
-
-
+    
+    func fetchPlaceAddress(coordinates: Coordinates) async throws -> ResponseJSON {
+        let urlString = Constants.googleapisUrl
+        return try await genericNetworkService.fetchData(for: NetworkingRouter.getPlaceAddress(coordinates: coordinates), baseURL: urlString, responseType: ResponseJSON.self)
+    }
+    
+    func fetchOneDayForecast(coordinates: Coordinates) async throws -> OneDayForecast {
+        let urlString = Constants.openWeatherOneDayUrl
+        return try await genericNetworkService.fetchData(for: NetworkingRouter.getFiveDaysForecast(coordinates: coordinates), baseURL: urlString, responseType: OneDayForecast.self)
+    }
+    
+    func fetchFiveDaysForecast(coordinates: Coordinates) async throws -> ForecastFiveDaysResponse {
+        let urlString = Constants.openWeatherFiveDaysUrl
+        return try await genericNetworkService.fetchData(for: NetworkingRouter.getFiveDaysForecast(coordinates: coordinates), baseURL: urlString, responseType: ForecastFiveDaysResponse.self)
+    }
+}
 
