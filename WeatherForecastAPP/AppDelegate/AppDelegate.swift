@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GoogleMaps
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,9 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
          window = UIWindow(frame: UIScreen.main.bounds)
          
+         
+         
          navigationController = UINavigationController()
          homeCoordinator = ForecastCoordinator(navigationController: navigationController)
          homeCoordinator.start()
+         
+         // MARK: GMSServices GoogleMaps
+         GMSServices.provideAPIKey("AIzaSyABAJzP7HAiQebd3nywFwf4BWM8cw6x6zY")
          
          window?.rootViewController = navigationController
          window?.makeKeyAndVisible()

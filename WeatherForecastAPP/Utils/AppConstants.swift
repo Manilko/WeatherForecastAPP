@@ -1,0 +1,17 @@
+//
+//  AppConstants.swift
+//  WeatherForecastAPP
+//
+//  Created by Yevhenii Manilko  on 19.09.2023.
+//
+
+import Foundation
+
+// MARK: constants
+struct AppConstants {
+    static let apiKey = "AIzaSyABAJzP7HAiQebd3nywFwf4BWM8cw6x6zY"
+    static let googleapisUrl: String = "https://maps.googleapis.com/maps/api/geocode/json"
+    static let openWeatherOneDayUrl: String = "https://api.openweathermap.org/data/2.5/weather"
+    static let openweatherAPPid: String = "ad0d72a9ee8f80c6f3a372c5140f108e"
+    static let openWeatherFiveDaysUrl: String = "https://api.openweathermap.org/data/2.5/forecast"
+}

@@ -39,20 +39,20 @@ extension NetworkingRouter {
         case .getPlaceAddress(let coordinates):
             return [
                 URLQueryItem(name: "latlng", value: "\(coordinates.latitude),\(coordinates.longitude)"),
-                URLQueryItem(name: "key", value: Constants.apiKey)
+                URLQueryItem(name: "key", value: AppConstants.apiKey)
             ]
         case .getOneDayForecast(coordinates: let coordinates):
             return [
                 URLQueryItem(name: "lat", value: "\(coordinates.latitude)"),
                 URLQueryItem(name: "lon", value: "\(coordinates.longitude)"),
                 URLQueryItem(name: "cnt", value: "\(4)"),
-                URLQueryItem(name: "appid", value: Constants.openweatherAPPid)
+                URLQueryItem(name: "appid", value: AppConstants.openweatherAPPid)
             ]
         case .getFiveDaysForecast(coordinates: let coordinates):
             return [
                 URLQueryItem(name: "lat", value: "\(coordinates.latitude)"),
                 URLQueryItem(name: "lon", value: "\(coordinates.longitude)"),
-                URLQueryItem(name: "appid", value: Constants.openweatherAPPid)
+                URLQueryItem(name: "appid", value: AppConstants.openweatherAPPid)
             ]
         }
     }
@@ -67,7 +67,7 @@ extension NetworkingRouter {
         urlRequest.httpMethod = method.rawValue
         urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        print(urlRequest)
+        AppLogger.log(level: .info, urlRequest)
         return urlRequest
     }
 }

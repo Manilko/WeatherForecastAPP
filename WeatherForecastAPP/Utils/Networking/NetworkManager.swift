@@ -16,17 +16,17 @@ final class NetworkManager {
     }
     
     func fetchPlaceAddress(coordinates: Coordinates) async throws -> ResponseJSON {
-        let urlString = Constants.googleapisUrl
+        let urlString = AppConstants.googleapisUrl
         return try await genericNetworkService.fetchData(for: NetworkingRouter.getPlaceAddress(coordinates: coordinates), baseURL: urlString, responseType: ResponseJSON.self)
     }
     
     func fetchOneDayForecast(coordinates: Coordinates) async throws -> OneDayForecast {
-        let urlString = Constants.openWeatherOneDayUrl
+        let urlString = AppConstants.openWeatherOneDayUrl
         return try await genericNetworkService.fetchData(for: NetworkingRouter.getFiveDaysForecast(coordinates: coordinates), baseURL: urlString, responseType: OneDayForecast.self)
     }
     
     func fetchFiveDaysForecast(coordinates: Coordinates) async throws -> ForecastFiveDaysResponse {
-        let urlString = Constants.openWeatherFiveDaysUrl
+        let urlString = AppConstants.openWeatherFiveDaysUrl
         return try await genericNetworkService.fetchData(for: NetworkingRouter.getFiveDaysForecast(coordinates: coordinates), baseURL: urlString, responseType: ForecastFiveDaysResponse.self)
     }
 }

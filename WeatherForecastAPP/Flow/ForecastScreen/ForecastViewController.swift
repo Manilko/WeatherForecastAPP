@@ -58,9 +58,9 @@ class ForecastViewController: UIViewController {
             Task {
                 do {
                     let placeAddress = try await networkManager.fetchPlaceAddress(coordinates: coordinates)
-                    print("        >>>>Place Address: \(placeAddress)")
+                    AppLogger.log(level: .info, placeAddress)
                 } catch {
-                    print("Error fetching place address: \(error)")
+                    AppLogger.log(level: .error, error)
                 }
             }
 
@@ -68,9 +68,9 @@ class ForecastViewController: UIViewController {
             Task {
                 do {
                     let forecast = try await networkManager.fetchOneDayForecast(coordinates: coordinates)
-                    print("        >>>>1-day Forecast: \(forecast)")
+                    AppLogger.log(level: .info, forecast)
                 } catch {
-                    print("Error fetching 1-day forecast: \(error)")
+                    AppLogger.log(level: .error, error)
                 }
             }
 
@@ -78,9 +78,9 @@ class ForecastViewController: UIViewController {
             Task {
                 do {
                     let forecast = try await networkManager.fetchFiveDaysForecast(coordinates: coordinates)
-                    print("        >>>>5-day Forecast: \(forecast)")
+                    AppLogger.log(level: .info, forecast)
                 } catch {
-                    print("Error fetching 5-day forecast: \(error)")
+                    AppLogger.log(level: .error, error)
                 }
             }
         }
