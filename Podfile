@@ -4,7 +4,7 @@
 target 'WeatherForecastAPP' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-pod 'GoogleMaps', '7.3.0'
+pod 'GoogleMaps', '8.2.0'
 pod 'GooglePlaces', '7.1.0'
 
   # Pods for WeatherForecastAPP

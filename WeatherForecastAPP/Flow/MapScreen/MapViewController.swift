@@ -12,7 +12,9 @@ import GoogleMaps
 
 final class MapViewController: UIViewController {
     
+    
     private let coordinates: Coordinates
+    weak var delegateView: Delegate?
 
     private lazy var mapView: GMSMapView = {
         let mapView = GMSMapView.init()
@@ -35,6 +37,10 @@ final class MapViewController: UIViewController {
                 self.selectedLocationMarker.map = self.mapView
             }
         }
+    }
+    
+    deinit {
+//        AppLogger.log(level: .success, "MapViewController deinited")
     }
     
     init(coordinates: Coordinates) {
@@ -133,7 +139,6 @@ extension MapViewController: CLLocationManagerDelegate{
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        
         AppLogger.log(level: .error, error)
     }
     
@@ -158,13 +163,13 @@ extension MapViewController: GMSMapViewDelegate{
     }
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-        
-        AppLogger.log(level: .info, "didTapInfoWindowOf")
+        delegateView?.reload(place: selectedPlace!)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func mapView(_ mapView: GMSMapView, didLongPressInfoWindowOf marker: GMSMarker) {
-        
-        AppLogger.log(level: .info, "didLongPressInfoWindowOf")
+        delegateView?.reload(place: selectedPlace!)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
@@ -184,7 +189,7 @@ extension MapViewController: GMSMapViewDelegate{
             do {
                 let placeAddress = try await networkManager.fetchPlaceAddress(coordinates: coordinates)
             
-                AppLogger.log(level: .info, placeAddress)
+//                AppLogger.log(level: .info, placeAddress)
 
                 self.selectedPlace = createModel(json: placeAddress, coordinate: coordinates)
                 self.isSelectedPlaceChangedLocation = true

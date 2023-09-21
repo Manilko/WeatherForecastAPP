@@ -12,16 +12,18 @@ protocol MapViewControllerDelegate: AnyObject {
 }
 
 class MapCoordinator: Coordinator {
+    
     var navigationController: UINavigationController
     private let coordinates: Coordinates
+    private let mapViewController: MapViewController
     
-    init(navigationController: UINavigationController, coordinates: Coordinates) {
+    init(navigationController: UINavigationController, coordinates: Coordinates, mapViewController: MapViewController) {
         self.navigationController = navigationController
         self.coordinates = coordinates
+        self.mapViewController = mapViewController
     }
     
     func start() {
-        let forecastViewController = MapViewController(coordinates: coordinates)
-        navigationController.pushViewController(forecastViewController, animated: true)
+        navigationController.pushViewController(mapViewController, animated: true)
     }
 }

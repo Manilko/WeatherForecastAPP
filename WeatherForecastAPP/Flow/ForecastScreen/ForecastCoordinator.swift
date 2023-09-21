@@ -17,29 +17,32 @@ protocol ForecastViewControllerDelegate: AnyObject {
 
 class ForecastCoordinator: Coordinator {
     var navigationController: UINavigationController
+    let forecastViewController: ForecastViewController
+    let coordinates = Coordinates(latitude: 37.7749, longitude: -122.4194)
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        self.forecastViewController = ForecastViewController(coordinates: coordinates)
     }
     
     func start() {
-        let coordinates = Coordinates(latitude: 37.7749, longitude: -122.4194)
-        let homeViewController = ForecastViewController(coordinates: coordinates)
-        homeViewController.delegate = self
-        navigationController.pushViewController(homeViewController, animated: false)
+        forecastViewController.delegate = self
+        navigationController.pushViewController(forecastViewController, animated: false)
     }
 }
 
 extension ForecastCoordinator: ForecastViewControllerDelegate {
     func goToSearchScreen() {
-        let coordinates = Coordinates(latitude: 37.7749, longitude: -122.4194)  // Sample coordinates
+        
         let placeAddressCoordinator = SearchCoordinator(navigationController: navigationController, coordinates: coordinates)
         placeAddressCoordinator.start()
     }
     
     func goToMapScreen() {
-        let coordinates = Coordinates(latitude: 37.7749, longitude: -122.4194)  // Sample coordinates
-        let forecastCoordinator = MapCoordinator(navigationController: navigationController, coordinates: coordinates)
-        forecastCoordinator.start()
+        let mapViewController = MapViewController(coordinates: coordinates)
+            mapViewController.delegateView = forecastViewController
+        
+        let mapCoordinator = MapCoordinator(navigationController: navigationController, coordinates: coordinates, mapViewController: mapViewController)
+        mapCoordinator.start()
     }
 }
