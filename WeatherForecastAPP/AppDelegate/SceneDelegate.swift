@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import GoogleMaps
+import GooglePlaces
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,10 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
+        // MARK: GMSServices GoogleMaps
+        GMSServices.provideAPIKey(AppConstants.gmsServicesapiKey)
+        
+        // MARK: GMSPlacesClient GooglePlaces
+        GMSPlacesClient.provideAPIKey(AppConstants.gmsPlacesClientKey)
+
         navigationController = UINavigationController()
         homeCoordinator = ForecastCoordinator(navigationController: navigationController)
         homeCoordinator.start()
-        
+
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

@@ -10,32 +10,24 @@ import UIKit
 import GooglePlaces
 
 final class SearchViewController: UIViewController {
-    private let coordinates: Coordinates
-
-    let searchVC = UISearchController(searchResultsController: ResultViewController())
     
-    init(coordinates: Coordinates) {
-        self.coordinates = coordinates
-        super.init(nibName: nil, bundle: nil)
-    }
+    weak var reloadDataDelegate: ForecastDataReloadDelegate?
+    let resultVC = UISearchController(searchResultsController: ResultViewController())
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        searchVC.searchBar.backgroundColor = .secondarySystemBackground
-        searchVC.searchResultsUpdater = self
+        resultVC.searchBar.backgroundColor = .secondarySystemBackground
+        resultVC.searchResultsUpdater = self
         
-        navigationItem.searchController = searchVC
+        navigationItem.searchController = resultVC
     }
 
 }
 
 extension SearchViewController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         
         guard let query = searchController.searchBar.text,
@@ -48,12 +40,17 @@ extension SearchViewController: UISearchResultsUpdating {
             case .success(let places):
                 DispatchQueue.main.async {
                     resultVC.update(with: places)
+                    resultVC.callBack = { selectedLocation in
+                        self.reloadDataDelegate?.reloadData(with: selectedLocation)
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             case.failure(let error):
-                print(error)
+                AppLogger.log(level: .error, error)
             }
         }
     }
+    
 }
 
 

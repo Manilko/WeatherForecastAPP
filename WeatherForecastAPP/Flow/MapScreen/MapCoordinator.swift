@@ -14,12 +14,10 @@ protocol MapViewControllerDelegate: AnyObject {
 class MapCoordinator: Coordinator {
     
     var navigationController: UINavigationController
-    private let coordinates: Coordinates
     private let mapViewController: MapViewController
     
-    init(navigationController: UINavigationController, coordinates: Coordinates, mapViewController: MapViewController) {
+    init(navigationController: UINavigationController, mapViewController: MapViewController) {
         self.navigationController = navigationController
-        self.coordinates = coordinates
         self.mapViewController = mapViewController
     }
     

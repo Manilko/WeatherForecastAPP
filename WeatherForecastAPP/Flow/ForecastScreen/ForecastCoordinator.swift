@@ -34,15 +34,19 @@ class ForecastCoordinator: Coordinator {
 extension ForecastCoordinator: ForecastViewControllerDelegate {
     func goToSearchScreen() {
         
-        let placeAddressCoordinator = SearchCoordinator(navigationController: navigationController, coordinates: coordinates)
-        placeAddressCoordinator.start()
+        let searchViewController = SearchViewController()
+        searchViewController.reloadDataDelegate = forecastViewController
+        
+        let searchCoordinator = SearchCoordinator(navigationController: navigationController, searchViewController: searchViewController)
+        searchCoordinator.start()
+        
     }
     
     func goToMapScreen() {
-        let mapViewController = MapViewController(coordinates: coordinates)
-            mapViewController.delegateView = forecastViewController
+        let mapViewController = MapViewController()
+            mapViewController.reloadDataDelegate = forecastViewController
         
-        let mapCoordinator = MapCoordinator(navigationController: navigationController, coordinates: coordinates, mapViewController: mapViewController)
+        let mapCoordinator = MapCoordinator(navigationController: navigationController, mapViewController: mapViewController)
         mapCoordinator.start()
     }
 }

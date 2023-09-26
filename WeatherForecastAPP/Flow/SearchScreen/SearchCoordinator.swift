@@ -13,16 +13,15 @@ protocol SearchViewControllerDelegate: AnyObject {
 
 class SearchCoordinator: Coordinator {
     var navigationController: UINavigationController
-    private let coordinates: Coordinates
+    private let searchViewController: SearchViewController
     
-    init(navigationController: UINavigationController, coordinates: Coordinates) {
+    init(navigationController: UINavigationController, searchViewController: SearchViewController) {
         self.navigationController = navigationController
-        self.coordinates = coordinates
+        self.searchViewController = searchViewController
     }
     
     func start() {
-        let placeAddressViewController = SearchViewController(coordinates: coordinates)
-        navigationController.pushViewController(placeAddressViewController, animated: true)
+        navigationController.pushViewController(searchViewController, animated: true)
     }
     
 }

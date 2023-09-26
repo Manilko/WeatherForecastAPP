@@ -6,45 +6,62 @@
 //
 
 import UIKit
+import Foundation
+import CoreLocation
 
-protocol Delegate: AnyObject {
-    func reload(place: Place)
-}
-
-extension ForecastViewController: Delegate{
+final class ForecastViewController: UIViewController {
     
-    func reload(place: Place) {
-        self.ImNow = place
-        self.coordinates = place.coordinates
-        
-//        view().layoutIfNeeded()
-        view().viewV.backgroundColor = .yellow
-        view().layoutSubviews()
+    // MARK: - Properties
+    private let networkManager = NetworkManager()
+    private let mainViewManager: DataManager
+    private let locationManager = CLLocationManager()
+    
+    var previousSelectedIndexPath: IndexPath?
+    
+    private var detailForecast: DetailForecast? = nil{
+        didSet{
+            
+            view().reloadView(detailForecast)
+            view().layoutSubviews()
+        }
     }
-}
+    private var hourlyForecast: [HourlyForecast]? = nil{
+        didSet{
+            view().layoutSubviews()
+        }
+    }
+    private var dailyForecast: [DailyForecast]? = nil{
+        didSet{
+            view().layoutSubviews()
+        }
+    }
+    
 
-
-class ForecastViewController: UIViewController {
     
     weak var delegate: ForecastViewControllerDelegate?
     
-    private var ImNow: Place
+    private var locationForecast: Place{
+        didSet{
+            
+            getData(from: locationForecast.coordinates)
+        }
+    }
     
-    private let networkManager = NetworkManager()
-     var coordinates: Coordinates
 
     init(coordinates: Coordinates) {
-        self.coordinates = coordinates
-        self.ImNow = Place(name: "", formattedAddress: "", id: "", coordinates: coordinates)
+        self.locationForecast = Place(coordinates: coordinates)
+        self.mainViewManager = DataManager(networkManager: networkManager)
+        
         super.init(nibName: nil, bundle: nil)
         
-        view().placeAddressButton.addTarget(self, action: #selector(goToSearch), for: .touchUpInside)
-        view().forecastButton.addTarget(self, action: #selector(goToMap), for: .touchUpInside)
+        view().searchButton.addTarget(self, action: #selector(goToSearch), for: .touchUpInside)
+        view().mapButton.addTarget(self, action: #selector(goToMap), for: .touchUpInside)
         view().collectionView.delegate = self
         view().collectionView.dataSource = self
         view().tableView.delegate = self
         view().tableView.dataSource = self
-        view().tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        view().tableView.register(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        view().collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "CollectionCell")
     }
 
     required init?(coder: NSCoder) {
@@ -56,113 +73,165 @@ class ForecastViewController: UIViewController {
         self.view = ForecastView()
     }
     
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor =  #colorLiteral(red: 0.2870183289, green: 0.5633350015, blue: 0.8874290586, alpha: 1)
         
-
-//        verificationData ()
+        locationManager.delegate = self
+        setLocationManager()
+        
+        let currentLocation = Coordinates(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0)
+        getData(from: currentLocation)
+        
+        AppLogger.log(level: .debug, currentLocation)
+        
+        
+       
+        
+    }
+    
+    private func setLocationManager() {
+        
+        DispatchQueue.global().async {
+            if CLLocationManager.locationServicesEnabled(){
+                self.locationManager.requestLocation()
+                self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                self.locationManager.startUpdatingLocation()
+            } else{
+                self.locationManager.requestWhenInUseAuthorization()
+            }
+        }
+    }
+    
+    private func getData(from coordinates: Coordinates) {
+        
+        Task {
+            let detailForecast = await mainViewManager.createViewDetailedForecast(from: coordinates)
+            if let detailForecast = detailForecast {
+                self.detailForecast = detailForecast
+//                    AppLogger.log(level: .debug, detailForecast)
+            } else {
+                AppLogger.log(level: .error, "Failed to get data to detailForecastView")
+            }
+        }
+        
+        Task {
+            let hourlyDailyForecast = await mainViewManager.createViewHourlyDailyForecast(from: coordinates)
+            self.hourlyForecast = hourlyDailyForecast?.hourlyForecasts
+            self.dailyForecast = hourlyDailyForecast?.dailyForecasts
+        }
     }
     
 
     @objc private func goToSearch() {
         delegate?.goToSearchScreen()
-        print(ImNow.coordinates)
     }
 
     @objc private func goToMap() {
         delegate?.goToMapScreen()
-        print(coordinates)
     }
 }
 
+// MARK: - TableViewDelegate
 extension ForecastViewController: UITableViewDataSource, UITableViewDelegate{
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        dailyForecast?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        60.0
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if let previousIndexPath = previousSelectedIndexPath {
+            view().deselectCell(at: previousIndexPath)
+        }
+        
+        view().selectCell(at: indexPath)
+        previousSelectedIndexPath = indexPath
     }
 
+
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = " coordinates \(ImNow.coordinates)"
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableViewCell else { return UITableViewCell() }
+
+        let dayForecast = dailyForecast?[indexPath.row]
+        guard let dayForecast = dayForecast else { return cell }
+        
+        cell.configure(with: dayForecast)
+
         return cell
     }
 
 }
 
+// MARK: - CollectionViewDelegate
 extension ForecastViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        hourlyForecast?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else { return UICollectionViewCell() }
         
-        cell.backgroundColor = .blue
+        let hourForecast = hourlyForecast?[indexPath.row]
+        guard let hourForecast = hourForecast else { return cell }
+        
+        cell.configure(with: hourForecast)
+        
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 80, height: 80)
+        CGSize(width: 80, height: 180)
     }
 }
 
+// MARK: - ViewSeparatable
 extension ForecastViewController: ViewSeparatable {
     typealias RootView = ForecastView
 }
 
-
-
-
-protocol ViewSeparatable {
-    associatedtype RootView: UIView
-}
-
-extension ViewSeparatable where Self: UIViewController {
-    func view() -> RootView {
-        guard let view = self.view as? RootView else {
-            return RootView()
-        }
-        return view
+// MARK: - DataReloadDelegate
+extension ForecastViewController: ForecastDataReloadDelegate{
+    
+    func reloadData(with place: Place) {
+        self.locationForecast = place
     }
 }
 
-final class SurveyFAQCell: UITableViewCell {
-}
 
-
-extension ForecastViewController{
-    private func verificationData () {
+// MARK: CLLocationManagerDelegate
+extension ForecastViewController: CLLocationManagerDelegate{
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        locationForecast = Place(coordinates:  Coordinates(latitude: locations.first?.coordinate.latitude ?? 0.0, longitude: locations.first?.coordinate.longitude ?? 0.0))
         
-        //     Fetch place address
-        Task {
-            do {
-                let placeAddress = try await networkManager.fetchPlaceAddress(coordinates: coordinates)
-                AppLogger.log(level: .info, placeAddress)
-            } catch {
-                AppLogger.log(level: .error, error)
-            }
-        }
-        
-        // Fetch 1-day forecast
-        Task {
-            do {
-                let forecast = try await networkManager.fetchOneDayForecast(coordinates: coordinates)
-                AppLogger.log(level: .info, forecast)
-            } catch {
-                AppLogger.log(level: .error, error)
-            }
-        }
-        
-        // Fetch 5-day forecast
-        Task {
-            do {
-                let forecast = try await networkManager.fetchFiveDaysForecast(coordinates: coordinates)
-                AppLogger.log(level: .info, forecast)
-            } catch {
-                AppLogger.log(level: .error, error)
-            }
-        }
     }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+            
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse, .denied:
+            return
+        case .restricted, .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        default:
+            locationManager.requestWhenInUseAuthorization()
+        }
+    
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        AppLogger.log(level: .error, error)
+    }
+    
 }

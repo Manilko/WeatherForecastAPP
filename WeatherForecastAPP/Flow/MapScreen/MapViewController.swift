@@ -12,9 +12,8 @@ import GoogleMaps
 
 final class MapViewController: UIViewController {
     
-    
-    private let coordinates: Coordinates
-    weak var delegateView: Delegate?
+    // MARK: - Properties
+    weak var reloadDataDelegate: ForecastDataReloadDelegate?
 
     private lazy var mapView: GMSMapView = {
         let mapView = GMSMapView.init()
@@ -39,17 +38,9 @@ final class MapViewController: UIViewController {
         }
     }
     
+    // MARK: - Lifecycle
     deinit {
-//        AppLogger.log(level: .success, "MapViewController deinited")
-    }
-    
-    init(coordinates: Coordinates) {
-        self.coordinates = coordinates
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+//        AppLogger.log(level: .success, "MapViewController deinit")
     }
     
     override func viewDidLoad() {
@@ -91,7 +82,7 @@ final class MapViewController: UIViewController {
 //        mapView.mapType = .normal
     }
     
-    func createModel(json: ResponseJSON, coordinate: Coordinates) -> Place {
+    func createPlaceModel(json: ResponseJSON, coordinate: Coordinates) -> Place {
         
         var placeName  = ""
         json.results.first?.addressComponents.forEach({ addressComponent in
@@ -163,12 +154,12 @@ extension MapViewController: GMSMapViewDelegate{
     }
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-        delegateView?.reload(place: selectedPlace!)
+        reloadDataDelegate?.reloadData(with: selectedPlace ?? Place())
         self.navigationController?.popViewController(animated: true)
     }
     
     func mapView(_ mapView: GMSMapView, didLongPressInfoWindowOf marker: GMSMarker) {
-        delegateView?.reload(place: selectedPlace!)
+        reloadDataDelegate?.reloadData(with: selectedPlace ?? Place())
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -188,10 +179,9 @@ extension MapViewController: GMSMapViewDelegate{
         Task {
             do {
                 let placeAddress = try await networkManager.fetchPlaceAddress(coordinates: coordinates)
-            
 //                AppLogger.log(level: .info, placeAddress)
 
-                self.selectedPlace = createModel(json: placeAddress, coordinate: coordinates)
+                self.selectedPlace = createPlaceModel(json: placeAddress, coordinate: coordinates)
                 self.isSelectedPlaceChangedLocation = true
             } catch {
                 AppLogger.log(level: .error, error)

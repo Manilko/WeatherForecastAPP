@@ -6,33 +6,11 @@
 //
 
 import UIKit
-import GoogleMaps
-import GooglePlaces
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
-     var navigationController: UINavigationController!
-     var homeCoordinator: ForecastCoordinator!
-
      func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-         window = UIWindow(frame: UIScreen.main.bounds)
-         
-         
-         
-         navigationController = UINavigationController()
-         homeCoordinator = ForecastCoordinator(navigationController: navigationController)
-         homeCoordinator.start()
-         
-         // MARK: GMSServices GoogleMaps
-         GMSServices.provideAPIKey(AppConstants.gmsServicesapiKey)
-         
-         // MARK: GMSPlacesClient GooglePlaces
-         GMSPlacesClient.provideAPIKey(AppConstants.gmsPlacesClientKey)
-         
-         window?.rootViewController = navigationController
-         window?.makeKeyAndVisible()
          
          return true
      }

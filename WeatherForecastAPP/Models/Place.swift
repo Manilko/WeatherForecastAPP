@@ -15,6 +15,22 @@ struct Place{
     let coordinates: Coordinates
 }
 
+extension Place{
+    init(){
+        self.name = ""
+        self.formattedAddress = ""
+        self.id = ""
+        self.coordinates = Coordinates(latitude: 0.0, longitude: 0.0)
+    }
+    
+    init(coordinates: Coordinates){
+        self.name = ""
+        self.formattedAddress = ""
+        self.id = ""
+        self.coordinates = coordinates
+    }
+}
+
 struct Coordinates: Equatable{
     let latitude: Double
     let longitude: Double

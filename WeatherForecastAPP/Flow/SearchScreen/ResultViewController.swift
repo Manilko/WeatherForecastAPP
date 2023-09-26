@@ -9,34 +9,36 @@ import Foundation
 import UIKit
 import GooglePlaces
 
-class ResultViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+final class ResultViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
  
-    private let table: UITableView = {
+    private let tableView: UITableView = {
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         return table
     }()
+    
     private var places: [Place] = []
+    var callBack: ((_ places: Place) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(table)
+        view.addSubview(tableView)
         
-        table.delegate = self
-        table.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         
         view.backgroundColor = .systemBlue
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        table.frame = view.bounds
+        tableView.frame = view.bounds
     }
     
     public func update(with places: [Place]){
         self.places = places
-        table.reloadData()
+        tableView.reloadData()
         
     }
     
@@ -45,15 +47,15 @@ class ResultViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = places[indexPath.row].name
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        table.deselectRow(at: indexPath, animated: true)
-        let place = places[indexPath.row]
-        AppLogger.log(level: .info, place)
-        
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedLocation = places[indexPath.row]
+        callBack?(selectedLocation)
+//        AppLogger.log(level: .info, selectedLocation)
     }
 }

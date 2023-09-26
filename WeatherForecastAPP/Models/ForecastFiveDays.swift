@@ -9,10 +9,8 @@ import Foundation
 
 
 struct ForecastFiveDaysResponse: Codable {
-    let cod: String
-    let message, cnt: Int
     let list: [List]
-    let city: City
+//    let city: City
 }
 
 // MARK: - City
@@ -33,13 +31,13 @@ struct Coord: Codable {
 struct List: Codable {
     let dt: Int
     let main: MainClass
-    let weather: [Weather]
-    let clouds: Clouds
+    let weather: [Weather]?
+    let clouds: Clouds?
     let wind: Wind
-    let visibility: Int
-    let pop: Double
-    let sys: Sys
-    let dtTxt: String
+    let visibility: Int?
+    let pop: Double?
+    let sys: Sys?
+    let dtTxt: String?
     let rain: Rain?
 
     enum CodingKeys: String, CodingKey {
