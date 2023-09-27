@@ -29,7 +29,7 @@ struct Coord: Codable {
 
 // MARK: - List
 struct List: Codable {
-    let dt: Int
+    let dt: TimeInterval
     let main: MainClass
     let weather: [Weather]?
     let clouds: Clouds?

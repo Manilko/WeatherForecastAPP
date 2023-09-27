@@ -169,7 +169,7 @@ final class ForecastView: UIView{
     }
 
     func reloadView(_ model: DetailForecast?) {
-        weekdayLabel.text = model?.date.changeDateFormat(outputFormat: "E, dd MMMM")
+        weekdayLabel.text = model?.date.changeDateFormat(outputFormat: AppConstants.DateFormatType.shortDateFormat)
         locationNameLabel.set(text: model?.name ?? "", leftIcon: UIImage(named: "locationWhite"))
         temperatureLabel.set(text: (model?.temp ?? "") + "°" , leftIcon: UIImage(named: "temperature"))
         humidityLabel.set(text: (model?.humidity ?? "") + "%", leftIcon: UIImage(named: "humidity"))

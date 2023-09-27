@@ -44,7 +44,7 @@ final class TableViewCell: UITableViewCell {
     }
     
     func configure(with model: DailyForecast){
-        leftLabel.text = model.day.changeDateFormat(outputFormat: "E")
+        leftLabel.text = model.day.changeDateFormat(inputFormat: AppConstants.DateFormatType.mediumDateFormat, outputFormat: AppConstants.DateFormatType.dayDateFormat)
         rightLabel.text = "\(model.dayTemp)°/\(model.nightTemp)°"
         if let imageData = model.icon{
             pictureView.image = UIImage(data: imageData)

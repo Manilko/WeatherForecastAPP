@@ -15,6 +15,7 @@ final class ForecastViewController: UIViewController {
     private let networkManager = NetworkManager()
     private let mainViewManager: DataManager
     private let locationManager = CLLocationManager()
+    weak var delegate: ForecastViewControllerDelegate?
     
     var previousSelectedIndexPath: IndexPath?
     
@@ -35,11 +36,7 @@ final class ForecastViewController: UIViewController {
             view().layoutSubviews()
         }
     }
-    
 
-    
-    weak var delegate: ForecastViewControllerDelegate?
-    
     private var locationForecast: Place{
         didSet{
             
@@ -81,15 +78,7 @@ final class ForecastViewController: UIViewController {
         
         locationManager.delegate = self
         setLocationManager()
-        
-        let currentLocation = Coordinates(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0)
-        getData(from: currentLocation)
-        
-        AppLogger.log(level: .debug, currentLocation)
-        
-        
-       
-        
+
     }
     
     private func setLocationManager() {

@@ -9,6 +9,18 @@ import Foundation
 
 // MARK: constants
 struct AppConstants {
+    
+    
+    struct DateFormatType {
+        static let shortDateFormat = "E, dd MMMM"
+        static let longDateFormat = "yyyy-MM-dd, E HH"
+        static let mediumDateFormat = "yyyy-MM-dd, E"
+        static let hoursDateFormat = "HH"
+        static let dayDateFormat = "E"
+    }
+    
+    
+    
     static let apiKey = "AIzaSyABAJzP7HAiQebd3nywFwf4BWM8cw6x6zY"
     static let googleapisUrl: String = "https://maps.googleapis.com/maps/api/geocode/json"
     static let openWeatherOneDayUrl: String = "https://api.openweathermap.org/data/2.5/weather"
@@ -17,3 +29,5 @@ struct AppConstants {
     static let gmsPlacesClientKey: String = "AIzaSyAIVCKmeKLQ_44T7ix9X-USNLyZxg1TPAU"
     static let gmsServicesapiKey: String = "AIzaSyB2adROZbx4bAu4xeR8ywMm3zCthUmTRn0"
 }
+
+

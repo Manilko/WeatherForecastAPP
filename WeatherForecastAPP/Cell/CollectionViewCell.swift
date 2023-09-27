@@ -44,8 +44,7 @@ final class CollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with model: HourlyForecast){
-        topLabel.text = (model.date.changeDateFormat(outputFormat: "HH") ?? "") + "°°"
-//        AppLogger.log(level: .debug, (model.date.changeDateFormat(outputFormat: "HH") ?? "") + "°°")
+        topLabel.text = (model.date.changeDateFormat(outputFormat: AppConstants.DateFormatType.hoursDateFormat) ?? "") + "°°"
         bottomLabel.text = model.temp + "°"
         if let imageData = model.icon{
             pictureView.image = UIImage(data: imageData)

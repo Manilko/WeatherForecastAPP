@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension String{
-    func changeDateFormat(inputFormat: String = "MM/dd/yyyy", outputFormat: String) -> String? {
+    func changeDateFormat(inputFormat: String = AppConstants.DateFormatType.longDateFormat, outputFormat: String) -> String? { 
         let dateFormatterInput = DateFormatter()
         dateFormatterInput.dateFormat = inputFormat
         

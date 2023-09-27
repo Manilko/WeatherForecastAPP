@@ -61,7 +61,7 @@ final class DataManager {
                 for data in forecast.list {
                     let date = Date(timeIntervalSince1970: TimeInterval(data.dt))
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "MM/dd/yyyy"
+                    dateFormatter.dateFormat = AppConstants.DateFormatType.mediumDateFormat
                     
                     let dayKey = dateFormatter.string(from: date)
                     
@@ -134,7 +134,7 @@ final class DataManager {
         let date = Date(timeIntervalSince1970: timestamp)
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
+        dateFormatter.dateFormat = AppConstants.DateFormatType.longDateFormat
         let formattedDate = dateFormatter.string(from: date)
         
         return formattedDate
