@@ -26,7 +26,7 @@ struct AppConstants {
     static let openWeatherOneDayUrl: String = "https://api.openweathermap.org/data/2.5/weather"
     static let openweatherAPPid: String = "ad0d72a9ee8f80c6f3a372c5140f108e"
     static let openWeatherFiveDaysUrl: String = "https://api.openweathermap.org/data/2.5/forecast"
-    static let gmsPlacesClientKey: String = "AIzaSyDemoC72_iFFpqwa9ZB7YCTiqiNZiLmIoA"
+    static let gmsPlacesClientKey: String = "AIzaSyAIVCKmeKLQ_44T7ix9X-USNLyZxg1TPAU"
     static let gmsServicesapiKey: String = "AIzaSyDemoC72_iFFpqwa9ZB7YCTiqiNZiLmIoA"
 }
 
