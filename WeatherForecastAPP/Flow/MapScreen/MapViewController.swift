@@ -50,7 +50,6 @@ final class MapViewController: UIViewController {
         mapView.delegate = self
         mapView.settings.zoomGestures = true
         
-        
         setLocationManager()
         setMap()
     }
@@ -76,10 +75,8 @@ final class MapViewController: UIViewController {
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-       
-
-//        mapView.mapType = .normal
+ 
+        mapView.mapType = .normal
     }
     
     func createPlaceModel(json: ResponseJSON, coordinate: Coordinates) -> Place {
