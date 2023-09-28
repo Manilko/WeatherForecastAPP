@@ -157,13 +157,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CE0259C92AC37B9600B0EE21 /* protocol */ = {
+		CE0259C92AC37B9600B0EE21 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
 				CE0259CA2AC37BB400B0EE21 /* ForecastDataReloadDelegate.swift */,
 				CE0259CC2AC37C4C00B0EE21 /* ViewSeparatable.swift */,
 			);
-			path = protocol;
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		CE0259D02AC387AE00B0EE21 /* Cell */ = {
@@ -175,14 +175,23 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		CE0259D52AC3882A00B0EE21 /* extension */ = {
+		CE0259D52AC3882A00B0EE21 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				CE0259D62AC3883F00B0EE21 /* UILabel.swift */,
 				CE0259DA2AC395A600B0EE21 /* Double.swift */,
 				CE0259D82AC38C3C00B0EE21 /* String.swift */,
 			);
-			path = extension;
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		CE025A1A2AC58D2900B0EE21 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CED956002ABA3E080029B353 /* GooglePlacesManager.swift */,
+				CE0259CE2AC37F2C00B0EE21 /* DataManager.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		CED955942AB9AFDE0029B353 = {
@@ -213,12 +222,8 @@
 				CED955EF2ABA2BF50029B353 /* AppDelegate */,
 				CED955D62ABA27980029B353 /* Flow */,
 				CED955F02ABA2CCC0029B353 /* Utils */,
-				CED955FC2ABA2E590029B353 /* Models */,
-				CED955A92AB9AFE00029B353 /* Assets.xcassets */,
-				CE0259D52AC3882A00B0EE21 /* extension */,
-				CE0259D02AC387AE00B0EE21 /* Cell */,
-				CE0259C92AC37B9600B0EE21 /* protocol */,
 				CED955AE2AB9AFE00029B353 /* Info.plist */,
+				CED955A92AB9AFE00029B353 /* Assets.xcassets */,
 			);
 			path = WeatherForecastAPP;
 			sourceTree = "<group>";
@@ -303,13 +308,15 @@
 		CED955F02ABA2CCC0029B353 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				CED955FC2ABA2E590029B353 /* Models */,
+				CE0259D52AC3882A00B0EE21 /* Extension */,
+				CE0259C92AC37B9600B0EE21 /* Protocol */,
 				CED955FD2ABA30AA0029B353 /* Views */,
 				CED955E42ABA2A520029B353 /* Networking */,
-				CED955D42ABA0FB70029B353 /* Coordinator.swift */,
-				CED955F62ABA2D9C0029B353 /* AppConstants.swift */,
-				CE0259CE2AC37F2C00B0EE21 /* DataManager.swift */,
 				CED955F12ABA2CEC0029B353 /* logger */,
-				CED956002ABA3E080029B353 /* GooglePlacesManager.swift */,
+				CE025A1A2AC58D2900B0EE21 /* Helpers */,
+				CED955F62ABA2D9C0029B353 /* AppConstants.swift */,
+				CED955D42ABA0FB70029B353 /* Coordinator.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -337,6 +344,7 @@
 		CED955FD2ABA30AA0029B353 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CE0259D02AC387AE00B0EE21 /* Cell */,
 				CED955FE2ABA30D10029B353 /* MarkerInfoView.swift */,
 			);
 			path = Views;
