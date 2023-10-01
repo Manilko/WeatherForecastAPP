@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class TableViewCell: UITableViewCell {
+final class TableViewCell: UITableViewCell, NibCapable {
     
     // MARK: - Properties
     private lazy var leftLabel: UILabel = {

@@ -41,8 +41,9 @@ final class DataManager {
 
             do {
                 let forecast = try await networkManager.fetchFiveDaysForecast(coordinates: coordinates)
-                
-                for element in forecast.list {
+                print(forecast)
+                guard let list = forecast.list else { return nil}
+                for element in list {
                     let iconCode = element.weather?.first?.icon ?? ""
 
                       do {
@@ -57,8 +58,8 @@ final class DataManager {
                     }
                 
                 var dailyAverages: [String: (dayTempSum: Double, nightTempSum: Double, dayCount: Int, nightCount: Int, dayIcons: [String], nightIcons: [String])] = [:]
-                
-                for data in forecast.list {
+                guard let list = forecast.list else { return nil}
+                for data in list {
                     let date = Date(timeIntervalSince1970: TimeInterval(data.dt))
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = AppConstants.DateFormatType.mediumDateFormat
