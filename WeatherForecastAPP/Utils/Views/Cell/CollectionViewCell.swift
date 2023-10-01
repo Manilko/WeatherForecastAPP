@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class CollectionViewCell: UICollectionViewCell {
+final class CollectionViewCell: UICollectionViewCell, NibCapable {
     
     // MARK: - Properties
     private lazy var topLabel: UILabel = {

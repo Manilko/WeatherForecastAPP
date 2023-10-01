@@ -8,6 +8,12 @@
 import Foundation
 import UIKit
 
+struct MainScreen: Codable {
+    let detailForecast: DetailForecast
+    let hourlyForecast: [HourlyForecast]?
+    let dailyForecast: [DailyForecast]?
+}
+
 struct DetailForecast: Codable {
     let name: String
     let date: String
